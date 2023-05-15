@@ -1,5 +1,5 @@
 import { Graphics } from '@pixi/react';
-import { Graphics as PIXI_Graphics } from 'pixi.js';
+import { FederatedEventHandler, FederatedPointerEvent, Graphics as PIXI_Graphics } from 'pixi.js';
 import { useCallback } from 'react';
 import { constants } from '../constants';
 
@@ -8,6 +8,8 @@ interface Props {
   height: number;
   width: number;
   color?: string;
+  onmousedown?: FederatedEventHandler<FederatedPointerEvent>;
+  onmouseup?: FederatedEventHandler<FederatedPointerEvent>;
 }
 
 const borderWidth = constants.components.board.borderWidth;
@@ -15,7 +17,7 @@ const borderRadius = constants.components.board.borderRadius;
 const offset = constants.components.board.offset;
 
 export default function Board(props: Props) {
-  const { height, width, color } = props;
+  const { height, width, color, onmousedown, onmouseup } = props;
 
   const draw = useCallback(
     (g: PIXI_Graphics) => {
@@ -30,5 +32,5 @@ export default function Board(props: Props) {
     [height, width, color],
   );
 
-  return (<Graphics draw={draw} />);
+  return (<Graphics draw={draw} eventMode='dynamic' onmousedown={onmousedown} onmouseup={onmouseup} />);
 }
