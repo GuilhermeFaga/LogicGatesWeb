@@ -1,22 +1,45 @@
-import { Container } from '@pixi/react';
+import { Container, useApp, useTick } from '@pixi/react';
 import { constants } from '../constants';
 import * as Logic from '../logic';
 import Board from './Board';
 import InputPin from './InputPin';
 import OutputPin from './OutputPin';
+import { useState } from 'react';
 
 
 interface Props {
   chip: Logic.Chip;
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   color?: string;
 }
 
 const width = 150;
 
 export default function Chip(props: Props) {
-  const { chip, x, y, color } = props;
+  const { chip, color } = props;
+  var { x: _x, y: _y } = props;
+
+  if (!_x || !_y) {
+    _x = 0;
+    _y = 0;
+  }
+
+  const [x, setX] = useState(_x);
+  const [y, setY] = useState(_y);
+
+  const [dragging, setDragging] = useState(false);
+
+  const [cursorXOffset, setCursorXOffset] = useState(0);
+  const [cursorYOffset, setCursorYOffset] = useState(0);
+
+  const app = useApp();
+  useTick((delta) => {
+    if (dragging) {
+      setX(app.renderer.events.pointer.global.x - cursorXOffset);
+      setY(app.renderer.events.pointer.global.y - cursorYOffset);
+    }
+  });
 
   const padding = constants.components.gate.padding;
   const pinOffset = constants.components.gate.pinOffset;
@@ -26,14 +49,22 @@ export default function Chip(props: Props) {
   const height = padding * 2 + (chip.inputs.length * pinWidth) + ((chip.inputs.length - 1) * pinGap);
 
   const inputs = chip.inputs.map((input, i) => {
-    return <InputPin x={pinWidth / 2} y={padding + pinOffset + ((pinWidth + pinGap) * i)} value={input.value} />;
+    return <InputPin key={i} x={pinWidth / 2} y={padding + pinOffset + ((pinWidth + pinGap) * i)} value={input.value} />;
   });
 
   const output = <OutputPin x={width} y={height / 2 + 8} value={chip.getOutputValue()} />;
 
   return (
-    <Container position={[x, y]}>
-      <Board height={height} width={width} color={color} />
+    <Container position={[x, y]} eventMode='dynamic'>
+      <Board height={height} width={width} color={color}
+        onmousedown={(event) => {
+          setCursorXOffset(event.global.x - x);
+          setCursorYOffset(event.global.y - y);
+          setDragging(true);
+        }}
+        onmouseup={(event) => {
+          setDragging(false);
+        }} />
       {inputs}
       {output}
     </Container>
