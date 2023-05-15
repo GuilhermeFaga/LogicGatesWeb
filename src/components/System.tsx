@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { constants } from "../constants";
-import { WindowContext } from "../contexts/WindowContext";
 import * as Logic from "../logic";
 import InputPin from "./InputPin";
 import OutputPin from "./OutputPin";
@@ -9,12 +8,13 @@ import OutputPin from "./OutputPin";
 interface Props {
   system: Logic.System;
   children: React.ReactNode;
+  windowSize: [number, number];
 }
 
 export default function System(props: Props) {
   const { system, children } = props;
 
-  const [width, height] = useContext(WindowContext);
+  const [width, height] = props.windowSize;
 
   const pinWidth = constants.components.system.pinWidth;
   const pinRadius = pinWidth / 2;
@@ -30,9 +30,9 @@ export default function System(props: Props) {
 
   return (
     <>
+      {children as React.ReactElement}
       {inputs}
       {output}
-      {children as React.ReactElement}
     </>
   );
 }
