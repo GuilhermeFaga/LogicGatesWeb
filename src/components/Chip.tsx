@@ -23,7 +23,7 @@ export default function Chip(props: Props) {
   const pinWidth = constants.components.gate.pinWidth;
   const pinGap = constants.components.gate.pinGap;
 
-  const height = padding * 2 + (chip.inputs.length * pinWidth) + ((chip.inputs.length > 1 ? Math.ceil(chip.inputs.length / 2) : 0) * pinGap);
+  const height = padding * 2 + (chip.inputs.length * pinWidth) + ((chip.inputs.length - 1) * pinGap);
 
   const inputs = chip.inputs.map((input, i) => {
     return <InputPin x={pinWidth / 2} y={padding + pinOffset + ((pinWidth + pinGap) * i)} value={input.value} />;
