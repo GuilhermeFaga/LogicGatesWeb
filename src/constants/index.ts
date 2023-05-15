@@ -15,6 +15,10 @@ export const constants = {
       pinWidth: 32,
       pinGap: 8
     },
+    system: {
+      pinWidth: 32,
+      pinGap: 32
+    },
     board: {
       borderWidth: 5,
       borderRadius: 8,
