@@ -14,5 +14,5 @@ export default function Connection(props: Props) {
   console.assert(true, connectionsUpdate);
 
   if (!input.position || !output.position) return null;
-  return <Line start={input.position} end={output.position} value={input.value} />;
+  return <Line start={input.position} end={output.position} value={output.value} />;
 }
