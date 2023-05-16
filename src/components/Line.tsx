@@ -27,13 +27,14 @@ export default function Line(props: Props) {
 
     g.moveTo(start.x, start.y);
 
-    if (xDist > yDist) {
+    if (xDist < yDist) {
       g.lineTo(end.x - xDist / 2, start.y);
       g.lineTo(end.x - xDist / 2, end.y);
     } else {
       g.lineTo(start.x, end.y - yDist / 2);
       g.lineTo(end.x, end.y - yDist / 2);
     }
+
     g.lineTo(end.x, end.y);
   }, [start, end, xDist, yDist, value]);
 

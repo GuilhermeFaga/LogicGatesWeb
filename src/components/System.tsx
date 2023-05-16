@@ -66,6 +66,11 @@ export default function System(props: Props) {
     );
   }
 
+  // sort array links by output value
+  links.sort((a, b) => {
+    return a.output.value - b.output.value;
+  });
+
   const connections = links.map((link, i) => {
     if (!link.input.position || !link.output.position) return null;
     return <Connection key={i} input={link.input} output={link.output} />;
