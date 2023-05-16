@@ -19,7 +19,6 @@ export default function OutputPin(props: Props) {
 
   return <Pin pin={outputPin} x={x} y={y} value={outputPin.value} highlight={highlight}
     onmousedown={(event) => {
-      console.log(event);
       dispatch(setSelectedPin(outputPin));
     }}
     onmouseup={(event) => {

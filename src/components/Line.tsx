@@ -35,7 +35,7 @@ export default function Line(props: Props) {
       g.lineTo(end.x, end.y - yDist / 2);
     }
     g.lineTo(end.x, end.y);
-  }, [start, end, xDist, yDist]);
+  }, [start, end, xDist, yDist, value]);
 
   return <Graphics draw={draw} />;
 }

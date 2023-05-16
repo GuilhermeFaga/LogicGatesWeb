@@ -16,6 +16,7 @@ interface Props {
 export default function System(props: Props) {
   const system = useAppSelector(state => state.app.system);
   const systemUpdate = useAppSelector(state => state.app.systemUpdate);
+  console.assert(true, systemUpdate);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function System(props: Props) {
       system.setInputValue(1, 1);
       dispatch(addChip(new Logic.NotGate()))
     }
-  }, []);
+  }, [system, dispatch]);
 
   const [width, height] = props.windowSize;
 

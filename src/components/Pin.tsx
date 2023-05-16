@@ -42,7 +42,7 @@ export default function Pin(props: Props) {
       g.drawCircle(x, y, radius - borderWidth);
       g.endFill();
     },
-    [x, y, highlight, fillColor],
+    [graphics, x, y, highlight, fillColor],
   );
 
   const pos = graphics?.toGlobal({ x, y });
@@ -51,7 +51,7 @@ export default function Pin(props: Props) {
 
   useEffect(() => {
     dispatch(updateConnections());
-  }, [pos]);
+  }, [dispatch, pos]);
 
   return <Graphics draw={draw} eventMode='dynamic'
     onmouseenter={() => setIsMouseOver(true)}
