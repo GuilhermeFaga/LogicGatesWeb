@@ -2,11 +2,16 @@
 export const constants = {
   colors: {
     border: "000000",
+    connection: "000000",
     on: "c3001c",
     off: "525252",
     board: "8e24c4",
     andGate: "de6426",
     notGate: "2856c5",
+    mouseOver: {
+      on: "D74C4C",
+      off: "8E8E8E"
+    },
   },
   components: {
     gate: {
