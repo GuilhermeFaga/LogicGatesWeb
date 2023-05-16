@@ -92,6 +92,8 @@ export class Chip {
     this.update();
     return this.output.value;
   }
+
+  // TODO Convert Chip to System
 }
 
 export class AndGate extends Chip {
@@ -141,6 +143,8 @@ export class System {
   addChip(chip: Chip) {
     this.chips.push(chip);
   }
+
+  // TODO Remove Chip
 
   update() {
     for (const chip of this.chips) {

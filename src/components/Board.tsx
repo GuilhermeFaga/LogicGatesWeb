@@ -34,3 +34,5 @@ export default function Board(props: Props) {
 
   return (<Graphics draw={draw} eventMode='dynamic' onmousedown={onmousedown} onmouseup={onmouseup} />);
 }
+
+// TODO Add text to the board
