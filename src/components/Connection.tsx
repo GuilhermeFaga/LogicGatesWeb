@@ -10,8 +10,8 @@ interface Props {
 
 export default function Connection(props: Props) {
   const { input, output } = props;
+  // eslint-disable-next-line
   const connectionsUpdate = useAppSelector(state => state.app.connectionsUpdate);
-  console.assert(true, connectionsUpdate);
 
   if (!input.position || !output.position) return null;
   return <Line start={input.position} end={output.position} value={output.value} />;
