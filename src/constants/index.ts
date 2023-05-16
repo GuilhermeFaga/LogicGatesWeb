@@ -2,6 +2,7 @@
 export const constants = {
   colors: {
     border: "000000",
+    highlightBorder: "7ADD6A",
     connection: "000000",
     on: "c3001c",
     off: "525252",

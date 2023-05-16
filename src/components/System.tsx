@@ -6,6 +6,7 @@ import InputPin from "./InputPin";
 import OutputPin from "./OutputPin";
 import { addChip } from "../redux/appReducer";
 import * as Logic from "../logic";
+import Connection from "./Connection";
 
 
 interface Props {
@@ -13,12 +14,13 @@ interface Props {
 }
 
 export default function System(props: Props) {
-  const app = useAppSelector(state => state.app);
+  const system = useAppSelector(state => state.app.system);
+  const systemUpdate = useAppSelector(state => state.app.systemUpdate);
   const dispatch = useAppDispatch();
-  const { system } = app;
 
   useEffect(() => {
     return () => {
+      system.setInputValue(1, 1);
       dispatch(addChip(new Logic.NotGate()))
     }
   }, []);
@@ -41,8 +43,36 @@ export default function System(props: Props) {
     return <Chip key={i} x={0} y={0} chip={chip} />;
   })
 
+  // Get connections between chips and system inputs/outputs
+  const links = system.chips.flatMap((chip) => {
+    return chip.inputs.flatMap((input) => {
+      return input.connections.map((connection) => {
+        return {
+          input,
+          output: connection
+        };
+      });
+    });
+  });
+
+  // Add system output connections to the existing connections
+  if (system.systemOutput.connections.length > 0) {
+    links.push(
+      ...system.systemOutput.connections.map((connection) => ({
+        input: system.systemOutput,
+        output: connection
+      }))
+    );
+  }
+
+  const connections = links.map((link, i) => {
+    if (!link.input.position || !link.output.position) return null;
+    return <Connection key={i} input={link.input} output={link.output} />;
+  });
+
   return (
     <>
+      {connections}
       {chips}
       {inputs}
       {output}

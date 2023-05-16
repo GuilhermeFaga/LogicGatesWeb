@@ -1,11 +1,17 @@
+import { useAppSelector } from "../redux/hooks";
 import Line from "./Line";
+import * as Logic from "../logic";
 
 
 interface Props {
-  start: { x: number, y: number };
-  end: { x: number, y: number };
+  input: Logic.InputPin;
+  output: Logic.OutputPin;
 }
 
 export default function Connection(props: Props) {
-  return <Line start={props.start} end={props.end} />;
+  const { input, output } = props;
+  const connectionsUpdate = useAppSelector(state => state.app.connectionsUpdate);
+
+  if (!input.position || !output.position) return null;
+  return <Line start={input.position} end={output.position} value={input.value} />;
 }

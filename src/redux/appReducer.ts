@@ -8,13 +8,15 @@ interface AppState {
   system: Logic.System;
   selectedPin: Logic.InputPin | Logic.OutputPin | null;
   systemUpdate: number;
+  connectionsUpdate: number;
 }
 
 // Define the initial state using that type
 const initialState: AppState = {
   system: new Logic.System(2),
   selectedPin: null,
-  systemUpdate: 0
+  systemUpdate: 0,
+  connectionsUpdate: 0
 }
 
 export const appSlice = createSlice({
@@ -33,10 +35,17 @@ export const appSlice = createSlice({
       state.system.addChip(action.payload);
       state.systemUpdate += 1
     },
+    update: (state) => {
+      state.system.update();
+      state.systemUpdate += 1;
+    },
+    updateConnections: (state) => {
+      state.connectionsUpdate += 1;
+    }
   },
 })
 
-export const { setSystem, setSelectedPin, addChip } = appSlice.actions
+export const { setSystem, setSelectedPin, addChip, update, updateConnections } = appSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectApp = (state: RootState) => state.app

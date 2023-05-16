@@ -7,17 +7,23 @@ import { constants } from "../constants";
 interface Props {
   start: { x: number, y: number };
   end: { x: number, y: number };
+  value: number;
 }
 
 export default function Line(props: Props) {
-  const { start, end } = props;
+  const { start, end, value } = props;
 
-  const xDist = Math.abs(end.x - start.x);
-  const yDist = Math.abs(end.y - start.y);
+  const xDist = end.x - start.x;
+  const yDist = end.y - start.y;
 
   const draw = useCallback((g: PIXI_Graphics) => {
     g.clear();
-    g.lineStyle({ width: 5, color: constants.colors.connection, alpha: 1, join: LINE_JOIN.ROUND });
+    g.lineStyle({
+      width: 5,
+      color: value ? constants.colors.on : constants.colors.connection,
+      alpha: 1,
+      join: LINE_JOIN.ROUND
+    });
 
     g.moveTo(start.x, start.y);
 

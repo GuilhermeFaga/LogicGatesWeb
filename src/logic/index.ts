@@ -2,11 +2,13 @@
 
 interface PinInterface {
   value: number;
+  position?: { x: number, y: number };
   connections: PinInterface[];
 }
 
 export class InputPin implements PinInterface {
   value: number;
+  position?: { x: number, y: number };
   connections: OutputPin[];
 
   constructor() {
@@ -37,6 +39,7 @@ export class InputPin implements PinInterface {
 
 export class OutputPin implements PinInterface {
   value: number;
+  position?: { x: number, y: number };
   connections: InputPin[];
 
   constructor() {
