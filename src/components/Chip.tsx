@@ -25,6 +25,8 @@ export default function Chip(props: Props) {
     _y = 0;
   }
 
+  chip.update();
+
   const [x, setX] = useState(_x);
   const [y, setY] = useState(_y);
 
@@ -49,10 +51,10 @@ export default function Chip(props: Props) {
   const height = padding * 2 + (chip.inputs.length * pinWidth) + ((chip.inputs.length - 1) * pinGap);
 
   const inputs = chip.inputs.map((input, i) => {
-    return <InputPin key={i} x={pinWidth / 2} y={padding + pinOffset + ((pinWidth + pinGap) * i)} value={input.value} />;
+    return <InputPin key={i} inputPin={input} x={pinWidth / 2} y={padding + pinOffset + ((pinWidth + pinGap) * i)} />;
   });
 
-  const output = <OutputPin x={width} y={height / 2 + 8} value={chip.getOutputValue()} />;
+  const output = <OutputPin x={width} y={height / 2 + 8} outputPin={chip.output} />;
 
   return (
     <Container position={[x, y]} eventMode='dynamic'>
