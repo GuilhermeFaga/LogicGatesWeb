@@ -7,6 +7,7 @@ import Hud from './components/Hud';
 import System from './components/System';
 import { setSelectedPin } from './redux/appReducer';
 import { store } from './redux/store';
+import DottedGrid from './components/DottedGrid';
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
       <Stage width={width} height={height} options={{ backgroundColor: 0x222222, antialias: true }} onMouseUp={() => {
         store.dispatch(setSelectedPin(null));
       }}>
+        <DottedGrid windowSize={[width, height]} />
         <Provider store={store}>
           <System windowSize={[width, height]} />
           {/* This sprite makes the interaction with the Graphics work. See https://github.com/pixijs/pixi-react/issues/402 */}

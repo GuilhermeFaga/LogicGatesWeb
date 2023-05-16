@@ -1,6 +1,7 @@
 
 export const constants = {
   colors: {
+    dottedGrid: "363636",
     border: "000000",
     highlightBorder: "7ADD6A",
     connection: "000000",
