@@ -44,9 +44,13 @@ export default function System() {
   const firstPinY = (height / 2) + (-(pinGap / 2 * (len - 1)) - (pinRadius * (len - 1)));
 
   const inputs = system.systemInputs.map((input, i) => {
-    return <OutputPin key={i} x={54} y={firstPinY + (pinGap + pinRadius) * i} outputPin={input} />;
+    let x = 54;
+    let y = firstPinY + (pinGap + pinRadius) * i;
+    input.position = { x, y };
+    return <OutputPin key={i} x={x} y={y} outputPin={input} />;
   });
 
+  system.systemOutput.position = { x: width - 54, y: height / 2 };
   const output = <InputPin x={width - 54} y={height / 2} inputPin={system.systemOutput} />;
 
   const chips = system.chips.map((chip, i) => {

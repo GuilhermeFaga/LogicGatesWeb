@@ -7,6 +7,8 @@ export const config = {
     connection: "000000",
     on: "c3001c",
     off: "525252",
+    darkOn: "400000",
+    darkOff: "222222",
     board: "8e24c4",
     andGate: "de6426",
     notGate: "2856c5",

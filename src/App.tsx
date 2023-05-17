@@ -2,13 +2,13 @@ import { Sprite, Stage } from '@pixi/react';
 import { Texture } from 'pixi.js';
 import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
-import DottedGrid from 'src/components/DottedGrid';
-import Hud from 'src/components/Hud';
-import System from 'src/components/System';
-import { setSelectedPin } from 'src/redux/appReducer';
-import { store } from 'src/redux/store';
+import DottedGrid from './components/DottedGrid';
+import Hud from './components/Hud';
+import System from './components/System';
+import { setSelectedPin } from './redux/appReducer';
+import { store } from './redux/store';
 
-import 'src/App.css';
+import './App.css';
 
 
 export default function App() {
