@@ -1,30 +1,28 @@
 import { Graphics } from '@pixi/react';
 import { Graphics as PIXI_Graphics } from "pixi.js";
 import { useCallback } from "react";
-import { constants } from '../constants';
+import { config } from '../config';
+import { useAppSelector } from '../redux/hooks';
 
-interface Props {
-  windowSize: [number, number];
-}
 
-export default function DottedGrid(props: Props) {
-  const { windowSize } = props;
+export default function DottedGrid() {
+  const windowSize = useAppSelector(state => state.app.windowSize);
+  let { width, height } = windowSize;
 
   const draw = useCallback((g: PIXI_Graphics) => {
     g.clear();
     g.calculateBounds()
-    let [w, h] = windowSize
 
-    g.beginFill(constants.colors.dottedGrid);
-    for (let i = 0; i < h; i += 20) {
-      for (let j = 0; j < w; j += 20) {
-        g.drawCircle(j, i, 1);
+    g.beginFill(config.colors.dottedGrid);
+    for (let i = 0; i < height; i += config.components.dottedGrid.gap) {
+      for (let j = 0; j < width; j += config.components.dottedGrid.gap) {
+        g.drawCircle(j, i, config.components.dottedGrid.dotSize);
       }
     }
     g.endFill();
 
 
-  }, [])
+  }, [width, height])
 
   return <Graphics draw={draw} />;
 }
