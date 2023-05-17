@@ -1,24 +1,31 @@
 import { useEffect } from "react";
-import { constants } from "../constants";
+import { config } from "../config";
+import * as Logic from "../logic";
+import { addChip, setWindowSize } from "../redux/appReducer";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Chip from "./Chip";
+import Connection from "./Connection";
 import InputPin from "./InputPin";
 import OutputPin from "./OutputPin";
-import { addChip } from "../redux/appReducer";
-import * as Logic from "../logic";
-import Connection from "./Connection";
+import SystemHud from "./SystemHud";
 
 
-interface Props {
-  windowSize: [number, number];
-}
-
-export default function System(props: Props) {
+export default function System() {
+  const windowSize = useAppSelector(state => state.app.windowSize);
   const system = useAppSelector(state => state.app.system);
   // eslint-disable-next-line
   const systemUpdate = useAppSelector(state => state.app.systemUpdate);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    return () => {
+      window.addEventListener('resize', () => {
+        dispatch(setWindowSize({ width: window.innerWidth, height: window.innerHeight }));
+      });
+    }
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -28,11 +35,11 @@ export default function System(props: Props) {
     }
   }, [system, dispatch]);
 
-  const [width, height] = props.windowSize;
+  const { width, height } = windowSize;
 
-  const pinWidth = constants.components.system.pinWidth;
+  const pinWidth = config.components.system.pinWidth;
   const pinRadius = pinWidth / 2;
-  const pinGap = constants.components.system.pinGap;
+  const pinGap = config.components.system.pinGap;
   const len = system.systemInputs.length;
   const firstPinY = (height / 2) + (-(pinGap / 2 * (len - 1)) - (pinRadius * (len - 1)));
 
@@ -82,6 +89,7 @@ export default function System(props: Props) {
     <>
       {connections}
       {chips}
+      <SystemHud />
       {inputs}
       {output}
     </>
