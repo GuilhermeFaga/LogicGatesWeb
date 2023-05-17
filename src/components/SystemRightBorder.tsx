@@ -9,7 +9,7 @@ export default function SystemRightBorder() {
 
   return (
     <Container position={[width - 64, 0]}>
-      <VerticalBorder windowHeight={height} />
+      <VerticalBorder height={height} />
     </Container>
   );
 }

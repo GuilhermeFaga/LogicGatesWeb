@@ -9,7 +9,7 @@ export default function SystemLeftBorder() {
 
   return (
     <Container position={[0, 0]}>
-      <VerticalBorder windowHeight={height} />
+      <VerticalBorder height={height} />
     </Container>
   );
 }
