@@ -1,7 +1,7 @@
 import { Graphics } from "@pixi/react";
-import { Graphics as PIXI_Graphics, LINE_JOIN } from "pixi.js";
+import { LINE_JOIN, Graphics as PIXI_Graphics } from "pixi.js";
 import { useCallback } from "react";
-import { constants } from "../constants";
+import { config } from "../config";
 
 
 interface Props {
@@ -20,7 +20,7 @@ export default function Line(props: Props) {
     g.clear();
     g.lineStyle({
       width: 5,
-      color: value ? constants.colors.on : constants.colors.connection,
+      color: value ? config.colors.on : config.colors.connection,
       alpha: 1,
       join: LINE_JOIN.ROUND
     });

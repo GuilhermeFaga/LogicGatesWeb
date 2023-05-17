@@ -1,10 +1,10 @@
 import { Graphics } from '@pixi/react';
 import { FederatedEventHandler, FederatedPointerEvent, Graphics as PIXI_Graphics } from 'pixi.js';
 import { useCallback, useEffect, useState } from 'react';
-import { constants } from '../constants';
+import { config } from '../config';
 import * as Logic from '../logic';
-import { useAppDispatch } from '../redux/hooks';
 import { updateConnections } from '../redux/appReducer';
+import { useAppDispatch } from '../redux/hooks';
 
 
 interface Props {
@@ -17,8 +17,8 @@ interface Props {
   onmouseup?: FederatedEventHandler<FederatedPointerEvent>;
 }
 
-const borderWidth = constants.components.pin.borderWidth;
-const width = constants.components.pin.width;
+const borderWidth = config.components.pin.borderWidth;
+const width = config.components.pin.width;
 const radius = width / 2;
 
 export default function Pin(props: Props) {
@@ -28,15 +28,15 @@ export default function Pin(props: Props) {
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [graphics, setGraphics] = useState<PIXI_Graphics | null>(null);
 
-  const baseColor = value ? constants.colors.on : constants.colors.off;
-  const mouseOverColor = value ? constants.colors.mouseOver.on : constants.colors.mouseOver.off;
+  const baseColor = value ? config.colors.on : config.colors.off;
+  const mouseOverColor = value ? config.colors.mouseOver.on : config.colors.mouseOver.off;
   const fillColor = isMouseOver ? mouseOverColor : baseColor;
 
   const draw = useCallback(
     (g: PIXI_Graphics) => {
       if (!graphics) setGraphics(g);
       g.clear();
-      g.beginFill(highlight ? constants.colors.highlightBorder : constants.colors.border);
+      g.beginFill(highlight ? config.colors.highlightBorder : config.colors.border);
       g.drawCircle(x, y, radius);
       g.beginFill(fillColor);
       g.drawCircle(x, y, radius - borderWidth);

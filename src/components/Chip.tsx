@@ -1,5 +1,5 @@
 import { Container, useApp, useTick } from '@pixi/react';
-import { constants } from '../constants';
+import { config } from '../config';
 import * as Logic from '../logic';
 import Board from './Board';
 import InputPin from './InputPin';
@@ -43,10 +43,10 @@ export default function Chip(props: Props) {
     }
   });
 
-  const padding = constants.components.gate.padding;
-  const pinOffset = constants.components.gate.pinOffset;
-  const pinWidth = constants.components.gate.pinWidth;
-  const pinGap = constants.components.gate.pinGap;
+  const padding = config.components.gate.padding;
+  const pinOffset = config.components.gate.pinOffset;
+  const pinWidth = config.components.gate.pinWidth;
+  const pinGap = config.components.gate.pinGap;
 
   const height = padding * 2 + (chip.inputs.length * pinWidth) + ((chip.inputs.length - 1) * pinGap);
 

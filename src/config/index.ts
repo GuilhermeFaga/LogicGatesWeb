@@ -1,5 +1,5 @@
 
-export const constants = {
+export const config = {
   colors: {
     dottedGrid: "363636",
     border: "000000",
@@ -16,6 +16,10 @@ export const constants = {
     },
   },
   components: {
+    dottedGrid: {
+      gap: 20,
+      dotSize: 1
+    },
     gate: {
       padding: 16,
       pinOffset: 24,
