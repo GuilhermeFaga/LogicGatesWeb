@@ -1,10 +1,10 @@
 import { Container, useApp, useTick } from '@pixi/react';
-import { config } from '../config';
-import * as Logic from '../logic';
+import { useState } from 'react';
+import { config } from 'src/config';
+import * as Logic from 'src/logic';
 import Board from './Board';
 import InputPin from './InputPin';
 import OutputPin from './OutputPin';
-import { useState } from 'react';
 
 
 interface Props {

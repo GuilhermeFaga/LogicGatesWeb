@@ -1,10 +1,10 @@
 import { Graphics } from '@pixi/react';
 import { FederatedEventHandler, FederatedPointerEvent, Graphics as PIXI_Graphics } from 'pixi.js';
 import { useCallback, useEffect, useState } from 'react';
-import { config } from '../config';
-import * as Logic from '../logic';
-import { updateConnections } from '../redux/appReducer';
-import { useAppDispatch } from '../redux/hooks';
+import { config } from 'src/config';
+import * as Logic from 'src/logic';
+import { updateConnections } from 'src/redux/appReducer';
+import { useAppDispatch } from 'src/redux/hooks';
 
 
 interface Props {

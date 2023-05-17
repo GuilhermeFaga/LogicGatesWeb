@@ -1,6 +1,6 @@
-import { useAppSelector } from "../redux/hooks";
+import * as Logic from "src/logic";
+import { useAppSelector } from "src/redux/hooks";
 import Line from "./Line";
-import * as Logic from "../logic";
 
 
 interface Props {

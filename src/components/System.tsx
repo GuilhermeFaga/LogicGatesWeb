@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { config } from "../config";
-import * as Logic from "../logic";
-import { addChip, setWindowSize } from "../redux/appReducer";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { config } from "src/config";
+import * as Logic from "src/logic";
+import { addChip, setWindowSize } from "src/redux/appReducer";
+import { useAppDispatch, useAppSelector } from "src/redux/hooks";
 import Chip from "./Chip";
 import Connection from "./Connection";
 import InputPin from "./InputPin";

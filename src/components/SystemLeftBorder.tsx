@@ -1,5 +1,5 @@
 import { Container } from "@pixi/react";
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector } from "src/redux/hooks";
 import VerticalBorder from "./VerticalBorder";
 
 

@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import * as Logic from "../logic";
+import * as Logic from "src/logic";
 import type { RootState } from './store';
 
 

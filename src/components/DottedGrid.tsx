@@ -1,8 +1,8 @@
 import { Graphics } from '@pixi/react';
 import { Graphics as PIXI_Graphics } from "pixi.js";
 import { useCallback } from "react";
-import { config } from '../config';
-import { useAppSelector } from '../redux/hooks';
+import { config } from 'src/config';
+import { useAppSelector } from 'src/redux/hooks';
 
 
 export default function DottedGrid() {

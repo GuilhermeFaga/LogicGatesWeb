@@ -1,6 +1,6 @@
-import * as Logic from '../logic';
-import { setSelectedPin, update } from '../redux/appReducer';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import * as Logic from 'src/logic';
+import { setSelectedPin, update } from 'src/redux/appReducer';
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import Pin from './Pin';
 
 

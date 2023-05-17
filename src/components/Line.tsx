@@ -1,7 +1,7 @@
 import { Graphics } from "@pixi/react";
 import { LINE_JOIN, Graphics as PIXI_Graphics } from "pixi.js";
 import { useCallback } from "react";
-import { config } from "../config";
+import { config } from "src/config";
 
 
 interface Props {
