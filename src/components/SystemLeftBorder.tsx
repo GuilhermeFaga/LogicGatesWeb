@@ -20,7 +20,7 @@ export default function SystemLeftBorder() {
       {systemInputs.map((input, i) => {
         if (!input.position) return null;
         return (
-          <Container position={{ x: 4, y: input.position.y - 8 }}>
+          <Container key={i} position={{ x: 4, y: input.position.y - 8 }}>
             <Slider initialState={!!input.value} onChange={(value) => {
               system.setInputValue(i, value ? 1 : 0);
               dispatch(update());
