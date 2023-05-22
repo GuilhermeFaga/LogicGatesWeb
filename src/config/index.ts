@@ -3,6 +3,7 @@ export const config = {
   colors: {
     dottedGrid: "363636",
     border: "000000",
+    selectedBorder: "F1F1F1",
     highlightBorder: "7ADD6A",
     connection: "000000",
     on: "c3001c",

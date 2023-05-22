@@ -1,3 +1,4 @@
+import { Rectangle } from "pixi.js";
 
 
 interface PinInterface {
@@ -61,6 +62,7 @@ export class OutputPin implements PinInterface {
 export class Chip {
   inputs: InputPin[];
   output: OutputPin;
+  rect?: Rectangle;
 
   constructor(nOfInputs: number) {
     this.inputs = [];

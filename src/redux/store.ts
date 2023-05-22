@@ -10,7 +10,13 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['app/addChip', 'app/setSelectedPin'],
+        ignoredActions: [
+          'app/addChip',
+          'app/setSelectedPin',
+          'app/handleSelectedChip',
+          'app/addSelectedChip',
+          'app/removeSelectedChip'
+        ],
         // Ignore these paths in the state
         ignoredPaths: ['app'],
       },

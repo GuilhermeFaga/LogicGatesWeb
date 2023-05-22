@@ -13,6 +13,7 @@ export interface WindowSize {
 interface AppState {
   system: Logic.System;
   selectedPin: Logic.InputPin | Logic.OutputPin | null;
+  selectedChips: Logic.Chip[];
   systemUpdate: number;
   connectionsUpdate: number;
   windowSize: WindowSize;
@@ -22,6 +23,7 @@ interface AppState {
 const initialState: AppState = {
   system: new Logic.System(2),
   selectedPin: null,
+  selectedChips: [],
   systemUpdate: 0,
   connectionsUpdate: 0,
   windowSize: { width: window.innerWidth, height: window.innerHeight }
@@ -42,6 +44,22 @@ export const appSlice = createSlice({
     setSelectedPin: (state, action: PayloadAction<Logic.InputPin | Logic.OutputPin | null>) => {
       state.selectedPin = action.payload;
     },
+    handleSelectedChip: (state, action: PayloadAction<Logic.Chip>) => {
+      if (state.selectedChips.includes(action.payload)) {
+        state.selectedChips = state.selectedChips.filter(chip => chip !== action.payload);
+      } else {
+        state.selectedChips = [action.payload];
+      }
+    },
+    addSelectedChip: (state, action: PayloadAction<Logic.Chip>) => {
+      state.selectedChips.push(action.payload);
+    },
+    removeSelectedChip: (state, action: PayloadAction<Logic.Chip>) => {
+      state.selectedChips = state.selectedChips.filter(chip => chip !== action.payload);
+    },
+    clearSelectedChips: (state) => {
+      state.selectedChips = [];
+    },
     addChip: (state, action: PayloadAction<Logic.Chip>) => {
       state.system.addChip(action.payload);
       state.systemUpdate += 1
@@ -56,7 +74,18 @@ export const appSlice = createSlice({
   },
 })
 
-export const { setWindowSize, setSystem, setSelectedPin, addChip, update, updateConnections } = appSlice.actions
+export const {
+  setWindowSize,
+  setSystem,
+  setSelectedPin,
+  handleSelectedChip,
+  addSelectedChip,
+  removeSelectedChip,
+  clearSelectedChips,
+  addChip,
+  update,
+  updateConnections
+} = appSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectApp = (state: RootState) => state.app

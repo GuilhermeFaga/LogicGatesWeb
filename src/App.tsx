@@ -1,11 +1,11 @@
 import { Sprite, Stage } from '@pixi/react';
 import { Texture } from 'pixi.js';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Provider } from 'react-redux';
 import DottedGrid from './components/DottedGrid';
+import EventsController from './components/EventsController';
 import Hud from './components/Hud';
 import System from './components/System';
-import { setSelectedPin } from './redux/appReducer';
 import { store } from './redux/store';
 
 import './App.css';
@@ -15,6 +15,7 @@ export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
 
+
   useEffect(() => {
     window.addEventListener('resize', () => {
       setWidth(window.innerWidth);
@@ -22,13 +23,35 @@ export default function App() {
     });
   }, []);
 
+
+  const onMouseDownRef = useRef(null as any);
+  const onMouseDown = useCallback((event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    onMouseDownRef.current(event);
+  }, [onMouseDownRef.current]);
+
+  const onMouseUpRef = useRef(null as any);
+  const onMouseUp = useCallback((event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    onMouseUpRef.current(event);
+  }, [onMouseUpRef.current]);
+
+
   return (
     <>
-      <Stage width={width} height={height} options={{ backgroundColor: 0x222222, antialias: true }} onMouseUp={() => {
-        store.dispatch(setSelectedPin(null));
-      }}>
+      <Stage
+        width={width}
+        height={height}
+        options={{ backgroundColor: 0x222222, antialias: true }}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}>
         <Provider store={store}>
+
+          {/* This component is responsible for rendering the grid */}
           <DottedGrid />
+
+          {/* This component is responsible for handling the events */}
+          <EventsController onMouseDownRef={onMouseDownRef} onMouseUpRef={onMouseUpRef} />
+
+          {/* System that contains all the chips and rendering the components inside it */}
           <System />
 
           {/* This sprite makes the interaction with the Graphics work. See https://github.com/pixijs/pixi-react/issues/402 */}
