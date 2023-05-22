@@ -1,7 +1,9 @@
 import { Container, useApp, useTick } from '@pixi/react';
-import { useState } from 'react';
+import { Container as PIXIContainer } from 'pixi.js';
+import { useEffect, useRef, useState } from 'react';
 import { config } from 'src/config';
 import * as Logic from 'src/logic';
+import { useAppSelector } from 'src/redux/hooks';
 import Board from './Board';
 import InputPin from './InputPin';
 import OutputPin from './OutputPin';
@@ -30,14 +32,17 @@ export default function Chip(props: Props) {
   const [x, setX] = useState(_x);
   const [y, setY] = useState(_y);
 
-  const [dragging, setDragging] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const [cursorXOffset, setCursorXOffset] = useState(0);
   const [cursorYOffset, setCursorYOffset] = useState(0);
 
+  const selected = useAppSelector(state => state.app.selectedChips.includes(chip));
+
   const app = useApp();
   useTick((delta) => {
-    if (dragging) {
+    if (isDragging) {
       setX(app.renderer.events.pointer.global.x - cursorXOffset);
       setY(app.renderer.events.pointer.global.y - cursorYOffset);
     }
@@ -56,17 +61,35 @@ export default function Chip(props: Props) {
 
   const output = <OutputPin x={width} y={height / 2 + 8} outputPin={chip.output} />;
 
+  const chipRef = useRef(null);
+
+  useEffect(() => {
+    if (chipRef.current) {
+      const container = chipRef.current as PIXIContainer;
+      chip.rect = container.getBounds();
+    }
+  }, [chipRef.current, isDragging]);
+
   return (
-    <Container position={[x, y]} eventMode='dynamic'>
-      <Board height={height} width={width} color={color}
+    <Container position={[x, y]} eventMode='dynamic' ref={chipRef}>
+      <Board height={height} width={width} color={color} selected={selected}
         onmousedown={(event) => {
           setCursorXOffset(event.global.x - x);
           setCursorYOffset(event.global.y - y);
-          setDragging(true);
+          setIsMouseDown(true);
         }}
+
         onmouseup={(event) => {
-          setDragging(false);
-        }} />
+          setIsMouseDown(false);
+          setIsDragging(false);
+        }}
+
+        onmousemove={(event) => {
+          if (isMouseDown) {
+            setIsDragging(true);
+          }
+        }}
+      />
       {inputs}
       {output}
     </Container>
