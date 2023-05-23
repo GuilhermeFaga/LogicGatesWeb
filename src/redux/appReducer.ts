@@ -55,6 +55,8 @@ export const appSlice = createSlice({
     },
     setTempWire: (state, action: PayloadAction<Logic.Wire | null>) => {
       state.tempWire = action.payload;
+      if (action.payload)
+        state.selectedWires = [action.payload];
     },
     handleSelectedWire: (state, action: PayloadAction<Logic.Wire>) => {
       if (state.selectedWires.includes(action.payload)) {

@@ -65,7 +65,7 @@ export default function System() {
   for (const chip of system.chips) {
     for (const input of chip.inputs) {
       for (const connection of input.connections) {
-        wires.push(new Logic.Wire(`wire_${wires.length}`, input, connection.output));
+        wires.push(connection);
       }
     }
   }
@@ -73,8 +73,9 @@ export default function System() {
   // Add system output connections to the existing connections
   if (system.systemOutput.connections.length > 0) {
     wires.push(
-      ...system.systemOutput.connections.map((connection) =>
-        new Logic.Wire(`wire_${wires.length}`, system.systemOutput, connection.output))
+      ...system.systemOutput.connections.map((connection) => {
+        return connection;
+      })
     );
   }
 

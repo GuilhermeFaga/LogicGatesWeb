@@ -20,7 +20,7 @@ export default function InputPin(props: Props) {
   return <Pin pin={inputPin} x={x} y={y} value={inputPin.value} highlight={highlight}
     onmousedown={(event) => {
       dispatch(setSelectedPin(inputPin));
-      dispatch(setTempWire(new Logic.Wire("tempWire", inputPin, undefined)));
+      dispatch(setTempWire(new Logic.Wire(inputPin, undefined)));
     }}
     onmouseup={(event) => {
       if (selectedPin instanceof Logic.OutputPin) {

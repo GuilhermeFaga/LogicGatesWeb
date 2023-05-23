@@ -19,21 +19,13 @@ export class InputPin implements PinInterface {
   }
 
   connect(output: OutputPin) {
-    const wire = new Wire("wire", this, output);
+    const wire = new Wire(this, output);
     this.connections.push(wire);
     output.connections.push(wire);
   }
 
-  createWire() {
-    const wire = new Wire("wire", this, undefined);
-    this.connections.push(wire);
-    return wire;
-  }
-
-  finishWire(output: OutputPin) {
-    const wire = this.connections[this.connections.length - 1];
-    wire.output = output;
-    output.connections.push(wire);
+  removeWire(wire: Wire) {
+    this.connections = this.connections.filter((w) => w.id !== wire.id);
   }
 
   disconnect(output: OutputPin) {
@@ -63,21 +55,13 @@ export class OutputPin implements PinInterface {
   }
 
   connect(input: InputPin) {
-    const wire = new Wire("wire", input, this);
+    const wire = new Wire(input, this);
     this.connections.push(wire);
     input.connections.push(wire);
   }
 
-  createWire() {
-    const wire = new Wire("wire", undefined, this);
-    this.connections.push(wire);
-    return wire;
-  }
-
-  finishWire(input: InputPin) {
-    const wire = this.connections[this.connections.length - 1];
-    wire.input = input;
-    input.connections.push(wire);
+  removeWire(wire: Wire) {
+    this.connections = this.connections.filter((w) => w.id !== wire.id);
   }
 
   disconnect(input: InputPin) {
@@ -86,13 +70,15 @@ export class OutputPin implements PinInterface {
   }
 }
 
+let wireUid = 0;
+
 export class Wire {
   id: string;
   input?: InputPin;
   output?: OutputPin;
 
-  constructor(id: string, input?: InputPin, output?: OutputPin) {
-    this.id = id;
+  constructor(input?: InputPin, output?: OutputPin) {
+    this.id = `wire_${wireUid++}`;
     this.input = input;
     this.output = output;
   }

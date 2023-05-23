@@ -1,6 +1,6 @@
 import { Container, useApp, useTick } from "@pixi/react";
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
-import { clearSelectedChips, clearSelectedWires, handleSelectedChip, handleSelectedWire, setSelectedPin, setTempWire } from '../redux/appReducer';
+import { clearSelectedChips, clearSelectedWires, handleSelectedChip, handleSelectedWire, setSelectedPin, setTempWire, setWires, update } from '../redux/appReducer';
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Application, DisplayObject, Graphics, ICanvas, Rectangle } from "pixi.js";
 import * as Logic from "../logic";
@@ -50,30 +50,15 @@ export default function EventsController(props: Props) {
   }, [isDragging]);
 
 
-  useTick((delta) => {
+  useTick(() => {
     if (isDragging) {
-
-      if (selectedWires.length <= 1) {
-
-        // if there is no wire selected, then check if the mouse is over a wire
-        if (selectedWires.length === 0) {
-          for (const wire of wires) {
-            // check if the mouse if over a wire
-            if (isPointInWire(app, { x: initialCursorPosition.x, y: initialCursorPosition.y }, wire)) {
-              // if so, select it
-              dispatch(handleSelectedWire(wire));
-              dispatch(clearSelectedChips());
-              break;
-            }
-          }
-        } else {
-          // if there is only one wire selected, then drag it
-          const wire = selectedWires[0];
-          if (isPointInWire(app, { x: initialCursorPosition.x, y: initialCursorPosition.y }, wire)) {
-            console.log('dragging wire');
-          }
-        }
-      }
+      wiresDraggingHandler(
+        selectedWires,
+        wires,
+        chips,
+        app,
+        initialCursorPosition,
+        dispatch);
     }
   });
 
@@ -139,7 +124,7 @@ function wiresSelectionHandler(
   for (const wire of wires) {
 
     // check if the mouse if over a wire
-    if (isPointInWire(app, { x: event.clientX, y: event.clientY }, wire)) {
+    if (isPointInWire(app, { x: event.clientX, y: event.clientY }, wire) !== false) {
       // if so, select it
       found = true;
       dispatch(handleSelectedWire(wire));
@@ -151,7 +136,12 @@ function wiresSelectionHandler(
   return found;
 }
 
-function isPointInWire(app: Application<ICanvas>, _point: { x: number, y: number }, wire: Logic.Wire) {
+enum PortionClicked {
+  'left',
+  'right'
+}
+
+function isPointInWire(app: Application<ICanvas>, _point: { x: number, y: number }, wire: Logic.Wire): false | PortionClicked {
   const wireGraphic = app.stage.getChildByName(wire.id) as Graphics;
   if (!wireGraphic) return false;
 
@@ -174,11 +164,64 @@ function isPointInWire(app: Application<ICanvas>, _point: { x: number, y: number
     const threshold = 10;
     if (point.x - threshold <= _point.x && _point.x <= nextPoint.x + threshold
       && point.y - threshold <= _point.y && _point.y <= point.y + threshold) {
-      return true;
+      return (i / points.length > 0.5 ? PortionClicked.right : PortionClicked.left);
     }
   }
 
   return false;
+}
+
+function wiresDraggingHandler(
+  selectedWires: Logic.Wire[],
+  wires: Logic.Wire[],
+  chips: Logic.Chip[],
+  app: Application<ICanvas>,
+  initialCursorPosition: { x: number; y: number; },
+  dispatch: ThunkDispatch<any, any, any>
+) {
+
+  // check if mouse is not over a chip
+  for (const chip of chips) {
+    const chipRect = (app.stage.getChildByName(chip.id) as DisplayObject).getBounds() as Rectangle;
+    if (chipRect.contains(initialCursorPosition.x, initialCursorPosition.y)) {
+      return;
+    }
+  }
+
+  if (selectedWires.length <= 1) {
+    // if there is no wire selected, then check if the mouse is over a wire
+    for (const wire of wires) {
+      // check if the mouse if over a wire
+      const portionClicked = isPointInWire(app, { x: initialCursorPosition.x, y: initialCursorPosition.y }, wire);
+      if (portionClicked !== false) {
+        if (wire.output && wire.input) {
+          // disconnect the wire from the pins it was connected to
+          wire.input?.removeWire(wire);
+          wire.output?.removeWire(wire);
+
+          switch (portionClicked) {
+            case PortionClicked.right:
+              // set the wire's input to undefined
+              wire.input = undefined;
+              // set tempWire to wire
+              dispatch(setTempWire(wire));
+              // set selectedPin to wire's output
+              dispatch(setSelectedPin(wire.output));
+              break;
+            case PortionClicked.left:
+              // set the wire's output to undefined
+              wire.output = undefined;
+              // set tempWire to wire
+              dispatch(setTempWire(wire));
+              // set selectedPin to wire's input
+              dispatch(setSelectedPin(wire.input));
+              break;
+          }
+        }
+        break;
+      }
+    }
+  }
 }
 
 function chipsSelectionHandler(
