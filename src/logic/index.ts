@@ -5,13 +5,13 @@ import { MutableRefObject } from "react";
 interface PinInterface {
   value: number;
   position?: { x: number, y: number };
-  connections: PinInterface[];
+  connections: Wire[];
 }
 
 export class InputPin implements PinInterface {
   value: number;
   position?: { x: number, y: number };
-  connections: OutputPin[];
+  connections: Wire[];
 
   constructor() {
     this.value = 0;
@@ -19,19 +19,32 @@ export class InputPin implements PinInterface {
   }
 
   connect(output: OutputPin) {
-    this.connections.push(output);
-    output.connections.push(this);
+    const wire = new Wire("wire", this, output);
+    this.connections.push(wire);
+    output.connections.push(wire);
+  }
+
+  createWire() {
+    const wire = new Wire("wire", this, undefined);
+    this.connections.push(wire);
+    return wire;
+  }
+
+  finishWire(output: OutputPin) {
+    const wire = this.connections[this.connections.length - 1];
+    wire.output = output;
+    output.connections.push(wire);
   }
 
   disconnect(output: OutputPin) {
-    this.connections = this.connections.filter((conn) => conn !== output);
-    output.connections = output.connections.filter((input) => input !== this);
+    this.connections = this.connections.filter((wire) => wire.output !== output);
+    output.connections = output.connections.filter((wire) => wire.input !== this);
   }
 
   update() {
     this.value = 0;
-    for (const output of this.connections) {
-      if (output.value) {
+    for (const wire of this.connections) {
+      if (wire.output?.value) {
         this.value = 1;
         break;
       }
@@ -42,7 +55,7 @@ export class InputPin implements PinInterface {
 export class OutputPin implements PinInterface {
   value: number;
   position?: { x: number, y: number };
-  connections: InputPin[];
+  connections: Wire[];
 
   constructor() {
     this.value = 0;
@@ -50,49 +63,49 @@ export class OutputPin implements PinInterface {
   }
 
   connect(input: InputPin) {
-    this.connections.push(input);
-    input.connections.push(this);
+    const wire = new Wire("wire", input, this);
+    this.connections.push(wire);
+    input.connections.push(wire);
+  }
+
+  createWire() {
+    const wire = new Wire("wire", undefined, this);
+    this.connections.push(wire);
+    return wire;
+  }
+
+  finishWire(input: InputPin) {
+    const wire = this.connections[this.connections.length - 1];
+    wire.input = input;
+    input.connections.push(wire);
   }
 
   disconnect(input: InputPin) {
-    this.connections = this.connections.filter((conn) => conn !== input);
-    input.connections = input.connections.filter((output) => output !== this);
+    this.connections = this.connections.filter((wire) => wire.input !== input);
+    input.connections = input.connections.filter((wire) => wire.output !== this);
   }
 }
 
 export class Wire {
   id: string;
-  input: InputPin;
-  output: OutputPin;
+  input?: InputPin;
+  output?: OutputPin;
 
-  constructor(id: string, input: InputPin, output: OutputPin) {
+  constructor(id: string, input?: InputPin, output?: OutputPin) {
     this.id = id;
     this.input = input;
     this.output = output;
   }
-
-  static findWireFromPoints(wires: Wire[], inputPosition: { x: number, y: number }, outputPosition: { x: number, y: number }) {
-    const threshold = 7;
-    for (const wire of wires) {
-      const input = wire.input.position;
-      const output = wire.output.position;
-      if (input && output) {
-        if (Math.abs(input.x - inputPosition.x) < threshold && Math.abs(input.y - inputPosition.y) < threshold &&
-          Math.abs(output.x - outputPosition.x) < threshold && Math.abs(output.y - outputPosition.y) < threshold) {
-          return wire;
-        }
-      }
-    }
-  }
-
 }
 
 export class Chip {
+  id: string;
   inputs: InputPin[];
   output: OutputPin;
   rect?: Rectangle;
 
-  constructor(nOfInputs: number) {
+  constructor(id: string, nOfInputs: number) {
+    this.id = id;
     this.inputs = [];
     for (let i = 0; i < nOfInputs; i++) {
       this.inputs.push(new InputPin());
@@ -130,8 +143,8 @@ export class Chip {
 }
 
 export class AndGate extends Chip {
-  constructor() {
-    super(2);
+  constructor(id: string) {
+    super(id, 2);
   }
 
   update() {
@@ -141,8 +154,8 @@ export class AndGate extends Chip {
 }
 
 export class NotGate extends Chip {
-  constructor() {
-    super(1);
+  constructor(id: string) {
+    super(id, 1);
   }
 
   update() {
@@ -191,8 +204,8 @@ export class System {
     return this.systemOutput.value;
   }
 
-  convertSystemToChip() {
-    const chip = new Chip(this.systemInputs.length);
+  convertSystemToChip(id: string) {
+    const chip = new Chip(id, this.systemInputs.length);
     chip.update = () => {
       for (const input of chip.inputs) {
         input.update();

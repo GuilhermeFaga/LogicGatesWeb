@@ -14,6 +14,7 @@ interface AppState {
   system: Logic.System;
   wires: Logic.Wire[];
   selectedPin: Logic.InputPin | Logic.OutputPin | null;
+  tempWire: Logic.Wire | null;
   selectedChips: Logic.Chip[];
   selectedWires: Logic.Wire[];
   systemUpdate: number;
@@ -26,6 +27,7 @@ const initialState: AppState = {
   system: new Logic.System(2),
   wires: [],
   selectedPin: null,
+  tempWire: null,
   selectedChips: [],
   selectedWires: [],
   systemUpdate: 0,
@@ -50,6 +52,9 @@ export const appSlice = createSlice({
     },
     setSelectedPin: (state, action: PayloadAction<Logic.InputPin | Logic.OutputPin | null>) => {
       state.selectedPin = action.payload;
+    },
+    setTempWire: (state, action: PayloadAction<Logic.Wire | null>) => {
+      state.tempWire = action.payload;
     },
     handleSelectedWire: (state, action: PayloadAction<Logic.Wire>) => {
       if (state.selectedWires.includes(action.payload)) {
@@ -102,6 +107,7 @@ export const {
   setSystem,
   setWires,
   setSelectedPin,
+  setTempWire,
   handleSelectedWire,
   addSelectedWire,
   removeSelectedWire,

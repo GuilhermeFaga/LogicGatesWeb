@@ -14,6 +14,7 @@ export const store = configureStore({
           'app/addChip',
           'app/setWires',
           'app/setSelectedPin',
+          'app/setTempWire',
           'app/handleSelectedWire',
           'app/addSelectedWire',
           'app/removeSelectedWire',

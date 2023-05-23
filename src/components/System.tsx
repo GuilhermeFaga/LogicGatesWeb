@@ -16,6 +16,8 @@ export default function System() {
   // eslint-disable-next-line
   const systemUpdate = useAppSelector(state => state.app.systemUpdate);
 
+  const tempWire = useAppSelector(state => state.app.tempWire);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -30,8 +32,8 @@ export default function System() {
   useEffect(() => {
     return () => {
       system.setInputValue(1, 1);
-      dispatch(addChip(new Logic.NotGate()))
-      dispatch(addChip(new Logic.AndGate()))
+      dispatch(addChip(new Logic.NotGate("chip_0")))
+      dispatch(addChip(new Logic.AndGate("chip_1")))
     }
   }, [system, dispatch]);
 
@@ -63,7 +65,7 @@ export default function System() {
   for (const chip of system.chips) {
     for (const input of chip.inputs) {
       for (const connection of input.connections) {
-        wires.push(new Logic.Wire(`wire_${wires.length}`, input, connection));
+        wires.push(new Logic.Wire(`wire_${wires.length}`, input, connection.output));
       }
     }
   }
@@ -72,17 +74,18 @@ export default function System() {
   if (system.systemOutput.connections.length > 0) {
     wires.push(
       ...system.systemOutput.connections.map((connection) =>
-        new Logic.Wire(`wire_${wires.length}`, system.systemOutput, connection))
+        new Logic.Wire(`wire_${wires.length}`, system.systemOutput, connection.output))
     );
   }
 
   // sort array links by output value
   wires.sort((a, b) => {
+    if (!a.output || !b.output) return 1;
     return a.output.value - b.output.value;
   });
 
   const connections = wires.map((wire, i) => {
-    if (!wire.input.position || !wire.output.position) return null;
+    if (!wire.input?.position && !wire.output?.position) return null;
     return <Wire key={i} wire={wire} />;
   });
 
@@ -93,6 +96,7 @@ export default function System() {
   return (
     <>
       {connections}
+      {tempWire && <Wire wire={tempWire} />}
       {chips}
       <SystemHud />
       {inputs}

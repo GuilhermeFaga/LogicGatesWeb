@@ -1,5 +1,5 @@
 import * as Logic from 'src/logic';
-import { setSelectedPin, update } from 'src/redux/appReducer';
+import { setSelectedPin, setTempWire, update } from 'src/redux/appReducer';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import Pin from './Pin';
 
@@ -20,6 +20,7 @@ export default function InputPin(props: Props) {
   return <Pin pin={inputPin} x={x} y={y} value={inputPin.value} highlight={highlight}
     onmousedown={(event) => {
       dispatch(setSelectedPin(inputPin));
+      dispatch(setTempWire(new Logic.Wire("tempWire", inputPin, undefined)));
     }}
     onmouseup={(event) => {
       if (selectedPin instanceof Logic.OutputPin) {

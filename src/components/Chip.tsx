@@ -61,17 +61,8 @@ export default function Chip(props: Props) {
 
   const output = <OutputPin x={width} y={height / 2 + 8} outputPin={chip.output} />;
 
-  const chipRef = useRef(null);
-
-  useEffect(() => {
-    if (chipRef.current) {
-      const container = chipRef.current as PIXIContainer;
-      chip.rect = container.getBounds();
-    }
-  }, [chipRef.current, isDragging]);
-
   return (
-    <Container position={[x, y]} ref={chipRef} name="chip">
+    <Container position={[x, y]} name={chip.id}>
       <Board height={height} width={width} color={color} selected={selected}
         onmousedown={(event) => {
           setCursorXOffset(event.global.x - x);
