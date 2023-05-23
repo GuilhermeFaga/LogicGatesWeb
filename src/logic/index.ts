@@ -61,10 +61,12 @@ export class OutputPin implements PinInterface {
 }
 
 export class Wire {
+  id: string;
   input: InputPin;
   output: OutputPin;
 
-  constructor(input: InputPin, output: OutputPin) {
+  constructor(id: string, input: InputPin, output: OutputPin) {
+    this.id = id;
     this.input = input;
     this.output = output;
   }

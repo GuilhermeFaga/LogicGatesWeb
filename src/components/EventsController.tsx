@@ -2,7 +2,7 @@ import { Container, useApp } from "@pixi/react";
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
 import { clearSelectedChips, clearSelectedWires, handleSelectedChip, handleSelectedWire, setSelectedPin } from '../redux/appReducer';
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { DisplayObject, Graphics } from "pixi.js";
+import { Application, DisplayObject, Graphics, ICanvas } from "pixi.js";
 import * as Logic from "../logic";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
@@ -17,8 +17,7 @@ export default function EventsController(props: Props) {
 
   const app = useApp();
   const chips = useAppSelector(state => state.app.system.chips);
-  const wires = app.stage.children.filter(child => child.name === 'wire');
-  const logicWires = useAppSelector(state => state.app.wires);
+  const wires = useAppSelector(state => state.app.wires);
 
   const dispatch = useAppDispatch();
 
@@ -57,7 +56,11 @@ export default function EventsController(props: Props) {
 
   function onMouseUp(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
 
-    onClick(event);
+    // if the mouse didn't move, then it's a click
+    if (initialCursorPosition.x === event.clientX
+      && initialCursorPosition.y === event.clientY) {
+      onClick(event);
+    }
 
     setIsMouseDown(false);
     setIsDragging(false);
@@ -66,20 +69,16 @@ export default function EventsController(props: Props) {
 
   function onClick(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
 
-    // if the mouse didn't move, then it's a click
-    if (initialCursorPosition.x === event.clientX
-      && initialCursorPosition.y === event.clientY) {
 
-      let found = false;
+    let found = false;
 
-      found = wiresSelectionHandler(event, dispatch, { wires, logicWires });
-      found = chipsSelectionHandler(event, dispatch, { chips }) || found;
+    found = wiresSelectionHandler(event, dispatch, { app, wires });
+    found = chipsSelectionHandler(event, dispatch, { chips }) || found;
 
-      if (!found) {
-        // if none of the chips or wires were selected, clear the selection
-        dispatch(clearSelectedWires());
-        dispatch(clearSelectedChips());
-      }
+    if (!found) {
+      // if none of the chips or wires were selected, clear the selection
+      dispatch(clearSelectedWires());
+      dispatch(clearSelectedChips());
     }
 
   }
@@ -99,22 +98,24 @@ export default function EventsController(props: Props) {
 function wiresSelectionHandler(
   event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   dispatch: ThunkDispatch<any, any, any>,
-  params: { wires: DisplayObject[], logicWires: Logic.Wire[] }
+  params: { app: Application<ICanvas>, wires: Logic.Wire[] }
 ) {
 
-  const { wires, logicWires } = params;
+  const { app, wires } = params;
 
   let found = false;
 
   // check if the mouse if over a wire
-  for (const wire of wires as Graphics[]) {
+  for (const wire of wires) {
+
+    const wireGraphic = app.stage.getChildByName(wire.id) as Graphics;
 
     // convert the wire's points to screen coordinates
     const points: { x: number, y: number }[] = [];
 
-    for (let i = 0; i < wire.geometry.points.length; i += 2) {
-      const x = wire.geometry.points[i];
-      const y = wire.geometry.points[i + 1];
+    for (let i = 0; i < wireGraphic.geometry.points.length; i += 2) {
+      const x = wireGraphic.geometry.points[i];
+      const y = wireGraphic.geometry.points[i + 1];
       points.push({ x, y });
     }
 
@@ -130,7 +131,7 @@ function wiresSelectionHandler(
         && point.y - threshold <= event.clientY && event.clientY <= point.y + threshold) {
         const inputPosition = points[points.length - 1];
         const outputPosition = points[0]
-        const logicWire = Logic.Wire.findWireFromPoints(logicWires, inputPosition, outputPosition);
+        const logicWire = Logic.Wire.findWireFromPoints(wires, inputPosition, outputPosition);
         if (!logicWire) break;
         found = true;
         dispatch(handleSelectedWire(logicWire));

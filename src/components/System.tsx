@@ -57,20 +57,22 @@ export default function System() {
     return <Chip key={i} x={0} y={0} chip={chip} />;
   })
 
+  const wires: Logic.Wire[] = []
+
   // Get connections between chips and system inputs/outputs
-  const wires = system.chips.flatMap((chip) => {
-    return chip.inputs.flatMap((input) => {
-      return input.connections.map((connection) => {
-        return new Logic.Wire(input, connection);
-      });
-    });
-  });
+  for (const chip of system.chips) {
+    for (const input of chip.inputs) {
+      for (const connection of input.connections) {
+        wires.push(new Logic.Wire(`wire_${wires.length}`, input, connection));
+      }
+    }
+  }
 
   // Add system output connections to the existing connections
   if (system.systemOutput.connections.length > 0) {
     wires.push(
       ...system.systemOutput.connections.map((connection) =>
-        new Logic.Wire(system.systemOutput, connection))
+        new Logic.Wire(`wire_${wires.length}`, system.systemOutput, connection))
     );
   }
 

@@ -15,5 +15,5 @@ export default function Wire(props: Props) {
   const selected = useAppSelector(state => state.app.selectedWires.includes(wire));
 
   if (!wire.input.position || !wire.output.position) return null;
-  return <Line start={wire.input.position} end={wire.output.position} value={wire.output.value} selected={selected} />;
+  return <Line id={wire.id} start={wire.input.position} end={wire.output.position} value={wire.output.value} selected={selected} />;
 }

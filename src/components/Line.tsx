@@ -5,6 +5,7 @@ import { config } from "src/config";
 
 
 interface Props {
+  id: string;
   start: { x: number, y: number };
   end: { x: number, y: number };
   value: number;
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export default function Line(props: Props) {
-  const { start, end, value, selected } = props;
+  const { id, start, end, value, selected } = props;
 
   const xDist = end.x - start.x;
   const yDist = end.y - start.y;
@@ -42,7 +43,7 @@ export default function Line(props: Props) {
   return (
     <>
       {selected && <SelectedLine {...props} />}
-      <Graphics draw={draw} name="wire" />
+      <Graphics draw={draw} name={id} />
     </>
   );
 }
