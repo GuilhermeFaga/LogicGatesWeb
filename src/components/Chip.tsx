@@ -71,7 +71,7 @@ export default function Chip(props: Props) {
   }, [chipRef.current, isDragging]);
 
   return (
-    <Container position={[x, y]} eventMode='dynamic' ref={chipRef}>
+    <Container position={[x, y]} ref={chipRef} name="chip">
       <Board height={height} width={width} color={color} selected={selected}
         onmousedown={(event) => {
           setCursorXOffset(event.global.x - x);

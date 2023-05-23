@@ -12,7 +12,11 @@ export const store = configureStore({
         // Ignore these action types
         ignoredActions: [
           'app/addChip',
+          'app/setWires',
           'app/setSelectedPin',
+          'app/handleSelectedWire',
+          'app/addSelectedWire',
+          'app/removeSelectedWire',
           'app/handleSelectedChip',
           'app/addSelectedChip',
           'app/removeSelectedChip'

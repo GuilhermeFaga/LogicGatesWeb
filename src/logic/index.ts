@@ -1,4 +1,5 @@
-import { Rectangle } from "pixi.js";
+import { Graphics, Rectangle } from "pixi.js";
+import { MutableRefObject } from "react";
 
 
 interface PinInterface {
@@ -57,6 +58,31 @@ export class OutputPin implements PinInterface {
     this.connections = this.connections.filter((conn) => conn !== input);
     input.connections = input.connections.filter((output) => output !== this);
   }
+}
+
+export class Wire {
+  input: InputPin;
+  output: OutputPin;
+
+  constructor(input: InputPin, output: OutputPin) {
+    this.input = input;
+    this.output = output;
+  }
+
+  static findWireFromPoints(wires: Wire[], inputPosition: { x: number, y: number }, outputPosition: { x: number, y: number }) {
+    const threshold = 7;
+    for (const wire of wires) {
+      const input = wire.input.position;
+      const output = wire.output.position;
+      if (input && output) {
+        if (Math.abs(input.x - inputPosition.x) < threshold && Math.abs(input.y - inputPosition.y) < threshold &&
+          Math.abs(output.x - outputPosition.x) < threshold && Math.abs(output.y - outputPosition.y) < threshold) {
+          return wire;
+        }
+      }
+    }
+  }
+
 }
 
 export class Chip {

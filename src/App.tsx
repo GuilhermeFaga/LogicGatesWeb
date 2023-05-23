@@ -34,6 +34,11 @@ export default function App() {
     onMouseUpRef.current(event);
   }, [onMouseUpRef.current]);
 
+  const onMouseMoveRef = useRef(null as any);
+  const onMouseMove = useCallback((event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    onMouseMoveRef.current(event);
+  }, [onMouseMoveRef.current]);
+
 
   return (
     <>
@@ -42,14 +47,18 @@ export default function App() {
         height={height}
         options={{ backgroundColor: 0x222222, antialias: true }}
         onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}>
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}>
         <Provider store={store}>
 
           {/* This component is responsible for rendering the grid */}
           <DottedGrid />
 
           {/* This component is responsible for handling the events */}
-          <EventsController onMouseDownRef={onMouseDownRef} onMouseUpRef={onMouseUpRef} />
+          <EventsController
+            onMouseDownRef={onMouseDownRef}
+            onMouseUpRef={onMouseUpRef}
+            onMouseMoveRef={onMouseMoveRef} />
 
           {/* System that contains all the chips and rendering the components inside it */}
           <System />

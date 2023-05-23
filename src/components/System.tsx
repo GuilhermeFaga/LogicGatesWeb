@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { config } from "src/config";
 import * as Logic from "src/logic";
-import { addChip, setWindowSize } from "src/redux/appReducer";
+import { addChip, setWindowSize, setWires } from "src/redux/appReducer";
 import { useAppDispatch, useAppSelector } from "src/redux/hooks";
 import Chip from "./Chip";
-import Connection from "./Connection";
+import Wire from "./Wire";
 import InputPin from "./InputPin";
 import OutputPin from "./OutputPin";
 import SystemHud from "./SystemHud";
@@ -58,36 +58,35 @@ export default function System() {
   })
 
   // Get connections between chips and system inputs/outputs
-  const links = system.chips.flatMap((chip) => {
+  const wires = system.chips.flatMap((chip) => {
     return chip.inputs.flatMap((input) => {
       return input.connections.map((connection) => {
-        return {
-          input,
-          output: connection
-        };
+        return new Logic.Wire(input, connection);
       });
     });
   });
 
   // Add system output connections to the existing connections
   if (system.systemOutput.connections.length > 0) {
-    links.push(
-      ...system.systemOutput.connections.map((connection) => ({
-        input: system.systemOutput,
-        output: connection
-      }))
+    wires.push(
+      ...system.systemOutput.connections.map((connection) =>
+        new Logic.Wire(system.systemOutput, connection))
     );
   }
 
   // sort array links by output value
-  links.sort((a, b) => {
+  wires.sort((a, b) => {
     return a.output.value - b.output.value;
   });
 
-  const connections = links.map((link, i) => {
-    if (!link.input.position || !link.output.position) return null;
-    return <Connection key={i} input={link.input} output={link.output} />;
+  const connections = wires.map((wire, i) => {
+    if (!wire.input.position || !wire.output.position) return null;
+    return <Wire key={i} wire={wire} />;
   });
+
+  useEffect(() => {
+    dispatch(setWires(wires));
+  }, [wires]);
 
   return (
     <>
