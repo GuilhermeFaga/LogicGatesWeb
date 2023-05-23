@@ -21,20 +21,18 @@ export default function System() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    return () => {
-      window.addEventListener('resize', () => {
-        dispatch(setWindowSize({ width: window.innerWidth, height: window.innerHeight }));
-      });
-    }
+    if (system.chips.length > 0) return;
+    window.addEventListener('resize', () => {
+      dispatch(setWindowSize({ width: window.innerWidth, height: window.innerHeight }));
+    });
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    return () => {
-      system.setInputValue(1, 1);
-      dispatch(addChip(new Logic.NotGate("chip_0")))
-      dispatch(addChip(new Logic.AndGate("chip_1")))
-    }
+    if (system.chips.length > 0) return;
+    system.setInputValue(1, 1);
+    dispatch(addChip(new Logic.NotGate("chip_0")))
+    dispatch(addChip(new Logic.AndGate("chip_1")))
   }, [system, dispatch]);
 
   const { width, height } = windowSize;
