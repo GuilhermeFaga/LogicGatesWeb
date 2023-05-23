@@ -27,17 +27,17 @@ export default function App() {
   const onMouseDownRef = useRef(null as any);
   const onMouseDown = useCallback((event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     onMouseDownRef.current(event);
-  }, [onMouseDownRef.current]);
+  }, []);
 
   const onMouseUpRef = useRef(null as any);
   const onMouseUp = useCallback((event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     onMouseUpRef.current(event);
-  }, [onMouseUpRef.current]);
+  }, []);
 
   const onMouseMoveRef = useRef(null as any);
   const onMouseMove = useCallback((event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     onMouseMoveRef.current(event);
-  }, [onMouseMoveRef.current]);
+  }, []);
 
 
   return (
