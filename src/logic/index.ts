@@ -1,5 +1,4 @@
-import { Graphics, Rectangle } from "pixi.js";
-import { MutableRefObject } from "react";
+import { Rectangle } from "pixi.js";
 
 
 interface PinInterface {

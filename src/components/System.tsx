@@ -4,10 +4,10 @@ import * as Logic from "src/logic";
 import { addChip, setWindowSize, setWires } from "src/redux/appReducer";
 import { useAppDispatch, useAppSelector } from "src/redux/hooks";
 import Chip from "./Chip";
-import Wire from "./Wire";
 import InputPin from "./InputPin";
 import OutputPin from "./OutputPin";
 import SystemHud from "./SystemHud";
+import Wire from "./Wire";
 
 
 export default function System() {
@@ -59,7 +59,8 @@ export default function System() {
     return <Chip key={i} x={0} y={0} chip={chip} />;
   })
 
-  const wires: Logic.Wire[] = []
+  // eslint-disable-next-line
+  let wires: Logic.Wire[] = [];
 
   // Get connections between chips and system inputs/outputs
   for (const chip of system.chips) {
@@ -92,7 +93,7 @@ export default function System() {
 
   useEffect(() => {
     dispatch(setWires(wires));
-  }, [wires]);
+  }, [dispatch, wires]);
 
   return (
     <>

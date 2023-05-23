@@ -1,6 +1,5 @@
 import { Container, useApp, useTick } from '@pixi/react';
-import { Container as PIXIContainer } from 'pixi.js';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { config } from 'src/config';
 import * as Logic from 'src/logic';
 import { useAppSelector } from 'src/redux/hooks';

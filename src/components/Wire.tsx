@@ -45,7 +45,7 @@ export default function Wire(props: Props) {
     if (inputPosition && outputPosition) {
       setComponent(<Line id={wire.id} start={inputPosition} end={outputPosition} value={wire.output?.value || 0} selected={selected} />);
     }
-  }, [inputPosition?.x, inputPosition?.y, outputPosition?.x, outputPosition?.y, selected, wire.output?.value]);
+  }, [inputPosition, outputPosition, inputPosition?.x, inputPosition?.y, outputPosition?.x, outputPosition?.y, selected, wire.output?.value, wire.id]);
 
   return component;
 }

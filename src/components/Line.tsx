@@ -49,7 +49,7 @@ export default function Line(props: Props) {
 }
 
 function SelectedLine(props: Props) {
-  const { start, end, value } = props;
+  const { start, end } = props;
 
   const xDist = end.x - start.x;
   const yDist = end.y - start.y;
@@ -74,7 +74,7 @@ function SelectedLine(props: Props) {
     }
 
     g.lineTo(end.x, end.y);
-  }, [start, end, xDist, yDist, value]);
+  }, [start, end, xDist, yDist]);
 
   return <Graphics draw={draw} />;
 }

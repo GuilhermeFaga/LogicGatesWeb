@@ -1,10 +1,10 @@
 import { Container, useApp, useTick } from "@pixi/react";
-import { MutableRefObject, useCallback, useEffect, useState } from "react";
-import { clearSelectedChips, clearSelectedWires, handleSelectedChip, handleSelectedWire, setSelectedPin, setTempWire, setWires, update } from '../redux/appReducer';
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { Application, DisplayObject, Graphics, ICanvas, Rectangle } from "pixi.js";
-import * as Logic from "../logic";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { Application, DisplayObject, Graphics, ICanvas, Rectangle } from "pixi.js";
+import { MutableRefObject, useEffect, useState } from "react";
+import * as Logic from "../logic";
+import { clearSelectedChips, clearSelectedWires, handleSelectedChip, handleSelectedWire, setSelectedPin, setTempWire } from '../redux/appReducer';
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 interface Props {
   onMouseDownRef: MutableRefObject<(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => void>;
@@ -39,7 +39,8 @@ export default function EventsController(props: Props) {
     onMouseMoveRef.current = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
       onMouseMove(event);
     }
-  }, [initialCursorPosition, isMouseDown]);
+    // eslint-disable-next-line
+  }, [onMouseDownRef, onMouseUpRef, onMouseMoveRef, initialCursorPosition, isMouseDown]);
 
 
   useEffect(() => {
