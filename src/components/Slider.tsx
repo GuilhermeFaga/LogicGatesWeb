@@ -1,7 +1,8 @@
-import { useCallback, useState } from "react";
-import { Container, Graphics, useTick } from "@pixi/react";
+import { Container, Graphics } from "@pixi/react";
 import { Graphics as PIXI_Graphics, Point } from "pixi.js";
+import { useCallback, useEffect, useState } from "react";
 import { config } from "src/config";
+import { useAnimation } from "src/util/animation";
 
 
 interface Props {
@@ -23,22 +24,16 @@ export default function Slider(props: Props) {
 }
 
 function SliderBox({ value }: { value: boolean }) {
-  const [state, setState] = useState(value);
-  const [alpha, setAlpha] = useState(value ? 1 : 0);
+  const [alpha, setAlpha] = useAnimation(value ? 1 : 0, 10);
 
-  useTick((delta) => {
-    if (state !== value) {
-      if (value) {
-        setAlpha(alpha + delta * 5);
-        if (alpha >= 1)
-          setState(value);
-      } else {
-        setAlpha(alpha - delta * 5);
-        if (alpha <= 0)
-          setState(value);
-      }
+  useEffect(() => {
+    if (value) {
+      setAlpha(1);
+    } else {
+      setAlpha(0);
     }
-  });
+    // eslint-disable-next-line
+  }, [value]);
 
   const draw = useCallback((g: PIXI_Graphics) => {
     g.clear();
@@ -54,28 +49,21 @@ function SliderBox({ value }: { value: boolean }) {
   return <Graphics draw={draw} />
 }
 
-function SliderDot({ value }: { value: boolean }) {
-  const [state, setState] = useState(value);
-  const falsePosition = new Point(8, 8);
-  const truePosition = new Point(24, 8);
-  const [position, setPosition] = useState(value ? truePosition : falsePosition);
+const truePosition = new Point(24, 8);
+const falsePosition = new Point(8, 8);
 
-  useTick((delta) => {
-    if (state !== value) {
-      let targetPosition = value ? truePosition : falsePosition;
-      if (targetPosition === truePosition) {
-        if (position.x < targetPosition.x)
-          setPosition(new Point(position.x + delta * 5, position.y))
-        if (position.x >= targetPosition.x)
-          setState(value);
-      } else {
-        if (position.x > targetPosition.x)
-          setPosition(new Point(position.x - delta * 5, position.y))
-        if (position.x <= targetPosition.x)
-          setState(value);
-      }
+function SliderDot({ value }: { value: boolean }) {
+  const [position, setPosition] = useAnimation(value ? truePosition : falsePosition, 0.2);
+
+  useEffect(() => {
+    if (value) {
+      setPosition(truePosition);
+    } else {
+      setPosition(falsePosition);
     }
-  });
+    // eslint-disable-next-line
+  }, [value]);
+
 
   const draw = useCallback((g: PIXI_Graphics) => {
     g.clear();
@@ -87,7 +75,7 @@ function SliderDot({ value }: { value: boolean }) {
     g.beginFill(config.colors.on, (position.x - 8) / (truePosition.x - 8));
     g.drawCircle(position.x, position.y, 6);
     g.endFill();
-  }, [position.x, position.y, truePosition.x]);
+  }, [position.x, position.y]);
 
   return <Graphics draw={draw} />
 }
